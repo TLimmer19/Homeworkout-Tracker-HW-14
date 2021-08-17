@@ -3,10 +3,10 @@ const logger = require("morgan");
 const mongoose = require("mongoose");
 const path = require("path");
 const PORT = process.env.PORT || 3000;
-const db = require("./models");
+const db = require("./models/index.js");
 const app = express();
 const apiRoutes = require("./routes/api/apiRoutes.js");
-const viewRoutes = require("./routes/view/viewRoutes.js");
+// const viewRoutes = require("./routes/view/viewRoutes.js");
 
 
 app.use(logger("dev"));
@@ -21,12 +21,25 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
     useFindAndModify: false
 });
 
-// routes
-// app.use(require("./routes/api.js"));
+// routes required
+app.use(apiRoutes);
+
+// front end route
+app.get("/", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/index.html"));
+});
+// front end route
+app.get("/exercise", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/exercise.html"));
+});
+// front end route
+app.get("/stats", function(req, res) {
+    res.sendFile(path.join(__dirname, "./public/stats.html"));
+});
 
 
 app.listen(PORT, () => {
     console.log(`App running on port ${PORT}!`);
 });
 
-module.exports = db;
+// module.exports = db;
